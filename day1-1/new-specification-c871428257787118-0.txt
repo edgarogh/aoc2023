@@ -1,0 +1,173 @@
+[name] New design 1
+[puzzle] c871428257787118
+[production-cost] 2000
+[power-usage] 1641
+[lines-of-code] 33
+
+[traces] 
+......................
+......................
+......................
+......................
+......................
+......................
+.......14.............
+....94.154.154........
+....A...14..94........
+....35C.....A..1C.....
+.....16.....A..16.....
+..14........34........
+......................
+......................
+
+[chip] 
+[type] NOTE
+[x] 16
+[y] 1
+[code] 
+
+
+<--
+Read this from
+bottom to top
+(55477 for me)
+
+[chip] 
+[type] UC4X
+[x] 3
+[y] 2
+[code] 
+  mov x1 acc
+  teq acc 10 # \n
++ jmp send
+  sub 48 # '0'
+  tlt acc 11
+send: + mov acc x3
+  slx x1
+
+[chip] 
+[type] NOTE
+[x] 8
+[y] 2
+[code] 
+The overall design
+follows a pipes-
+-and-filters
+approach with each
+MC**** chip doing
+further processing
+
+[chip] 
+[type] RAM
+[x] 13
+[y] 2
+
+[chip] 
+[type] NOTE
+[x] 1
+[y] 4
+[code] 
+On each iteration,
+reads input byte
+and forwards its
+numeric value if
+digit, the value
+10 if '\n', and
+filters out    \
+other values    \
+                 v
+
+[chip] 
+[type] UC6
+[x] 13
+[y] 4
+[code] 
+  slx x0
+  add x0
+  add x1
+  tgt acc 9
++ sub 10
+  mov acc x2
+- mov 0 acc
++ mov 1 acc
+
+[chip] 
+[type] UC6
+[x] 5
+[y] 5
+[code] 
+s: slx x1 #await
+  mov x1 dat
+  mov dat p1 # 1st
+l: slx x1 #await
+  mov x1 acc
+  teq acc 10
+- mov acc dat
+- jmp l
++ mov dat x3 # 2nd
+  mov x3 null
+
+[chip] 
+[type] BRIDGE
+[x] 8
+[y] 5
+
+[chip] 
+[type] UC6
+[x] 9
+[y] 5
+[code] 
+  slx x1
+  mov x1 x3
+  mov p0 x3
+  mov 11 acc
+loop:
+  sub 1
+  mov 0 x3
+  tlt acc 0
+- jmp loop
+  mov null x1
+
+[chip] 
+[type] NOTE
+[x] 16
+[y] 5
+[code] 
+On each iteration,
+adds x0 to the
+current digit of
+the 100P-14 below
+and moves to the
+next digit saving
+any carry in acc.
+
+<---
+
+[chip] 
+[type] NOTE
+[x] 2
+[y] 6
+[code] 
+Forwards the first
+and last digit
+respectively to
+p1 and x3, line by
+line
+
+              --->
+
+[chip] 
+[type] NOTE
+[x] 12
+[y] 7
+[code] 
+On each iteration,
+sends 14 values to
+x3, corresponding
+to digits to add
+to the adder below
+The 1st and 2nd
+come from left
+chip,others are 0s
+<---
+
