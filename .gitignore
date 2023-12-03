@@ -1,2 +1,5 @@
 /inputs/*.txt
 target/
+
+.idea/
+*.iml

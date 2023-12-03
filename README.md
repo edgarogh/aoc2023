@@ -20,6 +20,7 @@ This year, like 2 years ago, I try a different language/environment every day. H
   * 1st
     * Star 1: Shenzhen I/O
     * Star 2: Rust
+  * 2nd: Haskell (both stars) (first time doing Haskell)
 
 ## ▶️ Running
 
